@@ -1,0 +1,84 @@
+#include<stdio.h>
+#include <unistd.h>
+#include<fcntl.h>
+#include <sys/stat.h>
+
+#define BLOCK 10
+int main(int argc, char * argv[])
+{
+    if(argc != 3)
+    {
+        printf("wrong parameters!\n");
+        return 0;
+    }
+
+    int f_read = open(argv[1],O_RDONLY);
+    if(f_read == -1)
+    {
+        printf("failed when open the read_file\n");
+        return 0;
+    }
+
+    int f_write = open(argv[2],O_WRONLY);
+    if(f_write == -1)
+    {
+        printf("failed when open the write_file\n");
+        printf("i will creat the file!\n");
+        printf("and it will have the same access\n");
+        struct stat buf;
+        lstat(argv[1],&buf);
+        int access = 0 ;
+        int flag = 0;
+          flag = buf.st_mode & S_IRUSR;
+          if(flag == S_IRUSR) access += 256;
+
+          flag = buf.st_mode & S_IWUSR;
+          if(flag == S_IWUSR) access += 128;
+
+          flag = buf.st_mode & S_IXUSR;
+          if(flag == S_IXUSR) access += 64;
+
+          //group members
+          flag = buf.st_mode & S_IRGRP;
+          if(flag == S_IRGRP) access += 32;
+
+          flag = buf.st_mode & S_IWGRP;
+          if(flag == S_IWGRP) access += 16;
+
+          flag = buf.st_mode & S_IXGRP;
+          if(flag == S_IXGRP) access += 8;
+
+          //other members
+          flag = buf.st_mode & S_IROTH;
+          if(flag == S_IROTH) access += 4;
+
+          flag = buf.st_mode & S_IWOTH;
+          if(flag == S_IWOTH) access += 2;
+
+          flag = buf.st_mode & S_IXOTH;
+          if(flag == S_IXOTH) access += 1;
+
+
+        printf("%d\n",access);
+        f_write = open(argv[2],O_CREAT|O_WRONLY,access);
+
+    }
+
+    char buf[BLOCK];
+    int size = read(f_read,buf,BLOCK);
+    if(size==-1)
+    {
+        printf("failed!\n");
+        return 0;
+    }
+    else printf("succeed!\n");
+    while(size!=0)
+    {
+        printf("%s",buf);
+        write(f_write,buf,BLOCK);
+        size = read(f_read,buf,BLOCK);
+    }
+    close(f_read);
+    close(f_write);
+    return 0;
+}
