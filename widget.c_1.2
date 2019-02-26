@@ -1,0 +1,46 @@
+#include "widget.h"
+#include <QDebug>
+
+
+Widget::Widget(QWidget *parent)
+    : QWidget(parent)
+{
+    btn.setParent(this);
+    btn.setText("father");
+    this->resize(300,400);
+    label.resize(100,100);
+    label.setParent(this);
+    label.move(0,50);
+    int a = 0;
+    int i = 0;
+    label.setText(QString::number(a));
+    qtm.setParent(this);
+    qtm.start(1000);
+    connect(&qtm, &QTimer::timeout,
+            [=]() mutable
+            {
+                if(i == 1001)
+                {
+                    a = 0;
+                    i = 0;
+                    qDebug()<<a;
+                }
+                else
+                {
+                    a+=i;
+                    i++;
+                    qDebug()<<"this is a:"<<a;
+                    qDebug()<<"this is string a"<<QString::number(a);
+
+                }
+                label.setText(QString::number(a));
+
+            }
+            );
+
+}
+
+Widget::~Widget()
+{
+
+}
