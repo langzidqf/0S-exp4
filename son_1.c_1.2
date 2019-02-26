@@ -1,0 +1,24 @@
+#include "son_1.h"
+
+son_1::son_1(QWidget *parent) : QWidget(parent)
+{
+    using namespace std;
+    btn.setParent(this);
+    btn.setText("son1");
+    label.setParent(this);
+    label.move(0,50);
+    time_t now_time;
+    now_time = time(NULL);
+    label.setText(QString(QLatin1String(ctime(&now_time))));
+
+    qtm.setParent(this);
+    qtm.start(1000);
+    connect(&qtm,&QTimer::timeout,
+            [=]() mutable
+            {
+                now_time = time(NULL);
+                label.setText(QString(QLatin1String(ctime(&now_time))));
+            }
+            );
+    this->resize(300,400);
+}
