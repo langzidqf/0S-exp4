@@ -1,0 +1,27 @@
+#ifndef SON_1_H
+#define SON_1_H
+
+#include <QWidget>
+#include <QPushButton>
+#include <QLabel>
+#include <iostream>
+#include <ctime>
+#include <unistd.h>
+#include <QTimer>
+
+class son_1 : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit son_1(QWidget *parent = nullptr);
+private:
+    QPushButton btn;
+    QLabel label;
+    QTimer qtm;
+
+signals:
+
+public slots:
+};
+
+#endif // SON_1_H
