@@ -1,0 +1,38 @@
+#include "widget.h"
+#include "son_1.h"
+#include "son_2.h"
+#include <QApplication>
+#include <unistd.h>
+
+//this is the first edition,
+//i will polish it.
+
+int main(int argc, char *argv[])
+{
+    pid_t pid1 = fork();
+    if(pid1 == 0)
+    {
+        QApplication a(argc, argv);
+        son_1 son;
+        son.show();
+        return a.exec();
+    }
+    else
+    {
+        pid_t pid2 = fork();
+        if(pid2 == 0)
+        {
+            QApplication a(argc, argv);
+            son_2 son;
+            son.show();
+            return a.exec();
+        }
+        else
+        {
+            QApplication a(argc, argv);
+            Widget w;
+            w.show();
+            return a.exec();
+        }
+    }
+}
